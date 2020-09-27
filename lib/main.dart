@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:the_police/screen/main_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:polisi_crime_mapping/app.dart';
+import 'package:polisi_crime_mapping/injection.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  await setUp();
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MainScreen(),
-    );
-  }
+Future<void> setUp() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureInjection();
+  await Future.wait([
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
+  ]);
 }
