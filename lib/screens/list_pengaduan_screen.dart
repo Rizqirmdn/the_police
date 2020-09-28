@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -52,7 +53,7 @@ class _ListPengaduanScreenState extends State<ListPengaduanScreen> {
   }
 }
 
-class _Item extends StatelessWidget {
+class _Item extends StatefulWidget {
   final Pengaduan pengaduan;
 
   const _Item({
@@ -61,9 +62,14 @@ class _Item extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    bool isAmbil = false;
+  __ItemState createState() => __ItemState();
+}
 
+class __ItemState extends State<_Item> {
+  bool isEnabled = false;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 80,
       padding: EdgeInsets.all(5),
@@ -80,18 +86,32 @@ class _Item extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text("Keterangan: ${pengaduan.keterangan}"),
-              Text("Pelapor: ${pengaduan.masyarakat.nama}"),
-              Text("Jenis kejahatan: ${pengaduan.jenisKejahatan.jenis}"),
-              Text("Tanggal di buat: ${formatDate(pengaduan.tanggalDibuat)}"),
+              Text("Keterangan: ${widget.pengaduan.keterangan}"),
+              Text("Pelapor: ${widget.pengaduan.masyarakat.nama}"),
+              Text("Jenis kejahatan: ${widget.pengaduan.jenisKejahatan.jenis}"),
+              Text(
+                  "Tanggal di buat: ${formatDate(widget.pengaduan.tanggalDibuat)}"),
             ],
           ),
-          FlatButton(
-            textColor: Colors.white,
-            color: (isAmbil) ? Colors.brown : Colors.grey,
-            child: Text("AMBIL"),
-            onPressed: (isAmbil) ? () {} : null,
-          ),
+          (isEnabled)
+              ? FlatButton(
+                  onPressed: null,
+                  child: Text('ENABLED'),
+                )
+              : FlatButton(
+                  textColor: Colors.white,
+                  color: Colors.brown,
+                  child: Text("AMBIL"),
+                  onPressed: () {
+                    setState(() {
+                      isEnabled = !isEnabled;
+                    });
+                    FlushbarHelper.createSuccess(
+                      message: 'Berhasil Mengambil Pengaduan',
+                      duration: Duration(seconds: 2),
+                    )..show(context);
+                  },
+                ),
         ],
       ),
     );

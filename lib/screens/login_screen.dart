@@ -35,14 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
-             print(state.status);
+            print(state.status);
             state.status.maybeWhen(
               success: () =>
                   FlushbarHelper.createSuccess(message: "Login berhasil")
                     ..show(context),
-              error: (message) =>
-                  FlushbarHelper.createError(message: '${state.status}')
-                    ..show(context),
+              error: (message) => FlushbarHelper.createError(
+                  message:
+                      'Login Gagal, Periksa Kembali Email dan Password Anda')
+                ..show(context),
               orElse: () {},
             );
           },
@@ -92,7 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             state.status.maybeWhen(
                               loading: () => "Login...",
                               orElse: () => "Login",
-                            ),style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
